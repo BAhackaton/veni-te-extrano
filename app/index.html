@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+    <title>Veni te Extraño</title>
+    <script src='http://localhost:3000/socket.io/socket.io.js'></script>
+</head>
+
+<body>
+    <header>
+        <h1>Veni Te Extraño</h1>
+    </header>
+
+    <div>
+        <div class="header" id="serial">Tacho S/N: <span> 152976 </span>
+            <div>
+                <div class="status" id="status">Sin datos</div>
+            </div>
+
+            <script>
+                /*
+                 *	v0.1.0
+                 *  Cesto Sensado
+                 */
+
+                var socket = io.connect('http://localhost:3000');
+
+                 //escucha todos los mensajes que envia socket.io
+                socket.on('message', function (message) {
+
+                    var reemplazar = document.getElementById("status");
+
+                    var msgSensor = message.split(",")
+                    var estado_cesto = parseInt(msgSensor[1]);
+
+                    if (between(estado_cesto, 0, 20)) { // Está vacio
+                        reemplazar.innerHTML = "lleno";
+                    } else {
+                        if (between(estado_cesto, 20, 40)) {
+                            reemplazar.innerHTML = "medio";
+                        } else {
+                            reemplazar.innerHTML = "vacio";
+                        }
+                    }
+                });
+
+                function between(a, b, c) {
+                    if (a > b && a < c) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            </script>
+</body>
